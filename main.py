@@ -6,8 +6,8 @@ from UI.terminal import terminal
 def onAppStart(app):
     # LoginPage Initialization
     app.loginPage = LoginPage()
-    app.terminal = terminal()
-    app.screen = 'login' 
+    app.terminal = terminal(app)
+    app.screen = 'terminal'  # Start with the terminal debugging screen
     
 
     
@@ -25,6 +25,9 @@ def onMousePress(app, mouseX, mouseY):
          
 
 def onKeyPress(app, key):
-    app.loginPage.loginKeyPress(key, app)
+    if app.screen == 'login':
+        app.loginPage.loginKeyPress(key, app)
+    if app.screen == 'terminal':
+        app.terminal.onKeyPressTerminal(key)   
 
 runApp(app.width, app.height)

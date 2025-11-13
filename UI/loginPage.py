@@ -5,7 +5,7 @@ class LoginPage:
         self.box1Highlighted = False
         self.box2Highlighted = False
         self.background = 'assets/loginBackground.png'
-        self.username = 'Username'
+        self.username = 'Terry Davis'
         self.password = 'Password'
         self.loginPressed = False
         
@@ -31,8 +31,13 @@ class LoginPage:
         drawLabel(self.password, app.width*0.14, app.height*0.485, size= app.width*0.02, bold=True, fill='white', align = 'left')
         if self.box2Highlighted:
             self.highlightBox(2, app)
-        # LOGIN BUTTON
+        # login button
+        if self.username == 'Username' or self.password == 'Password':
+            drawRect(app.width*0.122396, app.height*0.641602,
+                    app.width*0.287109, app.height*0.084961,
+                    fill=rgb(110, 0, 18), border='black', borderWidth=2, opacity=80)
         
+
         
         
 
@@ -56,6 +61,7 @@ class LoginPage:
             password = self.password
             self.addUser(username, password)
             app.screen = 'terminal'
+            
         if self.box1Highlighted:
             if key == 'backspace':
                 self.username = self.username[:-1]
@@ -72,6 +78,7 @@ class LoginPage:
             elif  len(key) == 1:
                 if len(self.password) < 15:
                     self.password += key
+
     def loginMousePress(self, mouseX, mouseY, app):
         if (app.width*0.123047 <= mouseX <= app.width*0.405599 and
             app.height*0.344727 <= mouseY <= app.height*0.41211):
@@ -83,9 +90,12 @@ class LoginPage:
             self.box2Highlighted = True
             self.box1Highlighted = False
         
+        
+                    
+        
         # LOGIN BUTTON
-        elif (app.width*0.122396 <= mouseX <= app.width*0.409505 and
-              app.height*0.641602 <= mouseY <= app.height*0.726563):
+        elif (app.width*0.122396 <= mouseX <= app.width*0.287109 and
+              app.height*0.641602 <= mouseY <= app.height*0.084961):
             self.loginPressed = True
             
 
