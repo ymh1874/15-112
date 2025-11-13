@@ -5,8 +5,10 @@ class LoginPage:
         self.box1Highlighted = False
         self.box2Highlighted = False
         self.background = 'assets/loginBackground.png'
-        self.username = ''
-        self.password = ''
+        self.username = 'Username'
+        self.password = 'Password'
+        self.loginPressed = False
+        
         
     def addUser(self, username, password):
         LoginPage.users[username] = password
@@ -18,14 +20,23 @@ class LoginPage:
         drawRect(app.width*0.123047, app.height*0.344727,
              app.width*0.282552, app.height*0.067383,
             fill=rgb(110, 0, 18), border='black', borderWidth=2, opacity=80)
-        if not self.box1Highlighted:
-            drawLabel('Username', app.width*0.14, app.height*0.38, size=20, bold=True, fill='white', align = 'left')
+        if self.box1Highlighted:
+            self.highlightBox(1, app)
+        drawLabel(self.username, app.width*0.14, app.height*0.38, size=app.width*0.02, bold=True, fill='white', align = 'left')
+        
         # second box
         drawRect(app.width*0.123698, app.height*0.450195,
                 app.width*0.279948, app.height*0.067383,
                 fill=rgb(110, 0, 18), border='black', borderWidth=2, opacity=80)
-        if not self.box2Highlighted:   
-            drawLabel('Password', app.width*0.14, app.height*0.485, size=20, bold=True, fill='white', align = 'left')
+        drawLabel(self.password, app.width*0.14, app.height*0.485, size= app.width*0.02, bold=True, fill='white', align = 'left')
+        if self.box2Highlighted:
+            self.highlightBox(2, app)
+        # LOGIN BUTTON
+        
+        
+        
+
+
         
     def highlightBox(self, boxNumber, app):
 
@@ -39,6 +50,44 @@ class LoginPage:
                 app.width*0.279948, app.height*0.067383,
                 fill=None, border='white', borderWidth=4, opacity=100)
 
+    def loginKeyPress(self, key, app):
+        if key == 'enter' and self.username != 'Username' and self.password != 'Password' :
+            username = self.username
+            password = self.password
+            self.addUser(username, password)
+            app.screen = 'terminal'
+        if self.box1Highlighted:
+            if key == 'backspace':
+                self.username = self.username[:-1]
+            elif  key.isalpha() and len(key) == 1:
+                if self.username == 'Username':
+                    self.username = ''
+                if len(self.username) < 15:
+                    self.username += key
+        elif self.box2Highlighted:
+            if key == 'backspace':
+                self.password = self.password[:-1]
+            if self.password == 'Password':
+                self.password = ''
+            elif  len(key) == 1:
+                if len(self.password) < 15:
+                    self.password += key
+    def loginMousePress(self, mouseX, mouseY, app):
+        if (app.width*0.123047 <= mouseX <= app.width*0.405599 and
+            app.height*0.344727 <= mouseY <= app.height*0.41211):
+            self.box1Highlighted = True  
+            self.box2Highlighted = False
+
+        elif (app.width*0.123698 <= mouseX <= app.width*0.403646 and
+              app.height*0.450195 <= mouseY <= app.height*0.517578):
+            self.box2Highlighted = True
+            self.box1Highlighted = False
+        
+        # LOGIN BUTTON
+        elif (app.width*0.122396 <= mouseX <= app.width*0.409505 and
+              app.height*0.641602 <= mouseY <= app.height*0.726563):
+            self.loginPressed = True
+            
 
     def checkUser(self, username, password):
         return LoginPage.users.get(username) == password
