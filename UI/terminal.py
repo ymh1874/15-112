@@ -16,6 +16,7 @@ class terminal():
         self.files = {
             'readme.txt': 'This is a sample readme file.\nFeel free to edit it!',
             'notes.txt': 'These are some sample notes.\nRemember to check them later.'
+
         }
 
         self.commands = {
@@ -26,7 +27,9 @@ class terminal():
             'whoami': self.cmdWhoami,
             'version': self.cmdVersion,
             'txt': self.cmdTxt, 
-            'style': self.cmdStyle
+            'style': self.cmdStyle,
+            'touch': self.cmdTouch,
+            'gui': self.cmdGui
         }
 
     def draw(self, app):
@@ -50,6 +53,9 @@ class terminal():
         cursorX = self.margin + len(self.prompt + self.currLine) * (self.fontSize * 0.6)
         cursorY =  + len(self.textLines) * self.lineSpacing
         drawRect(cursorX, cursorY, 10, self.fontSize, fill=self.textColor)
+
+    def drawLines(self, app):
+        pass
 
     def onKeyPressTerminal(self, key):
         if key == 'enter':
@@ -85,7 +91,7 @@ class terminal():
         if not args:
             self.textLines.append('usage: cat <filename>')
             return
-
+        
         filename = args[0].lower()
         content = self.files.get(filename)
 
@@ -94,6 +100,17 @@ class terminal():
                 self.textLines.append(line)
         else:
             self.textLines.append(f'cat: {filename}: file not found')
+    def cmdTouch(self, args):
+        if not args:
+            self.textLines.append('usage: touch <filename>')
+            return
+
+        filename = args[0].lower()
+        if filename in self.files:
+            self.textLines.append(f'touch: {filename}: file already exists')
+        else:
+            self.files[filename] = 'null'
+            self.textLines.append(f'Created file: {filename}')
 
     def cmdClear(self, _):
         self.textLines = []
@@ -117,6 +134,7 @@ class terminal():
         filename = args[0].lower()
         if filename in self.files:
             self.textLines.append(f'Opening {filename} in text editor... (not implemented)')
+            #self.textEditor(self.files[filename])
         else:
             self.textLines.append(f'txt: {filename}: file not found')
     def cmdStyle(self, args):
@@ -132,6 +150,14 @@ class terminal():
             self.textLines.append(f'Text color changed to {color}.')
         else:
             self.textLines.append(f'color: {color}: invalid color. Valid colors are: {", ".join(validColors)}')
+            
+    def cmdGui(self, _):
+        app.screen = 'desktop'
+
+    def textEditor(self, content):
+          drawRect(0, 0, app.width, app.height, fill='black')
+          drawLabel('Text Editor', app.width / 2, app.height / 2,
+                    size=30, fill='white', font='monospace', align='center')
 
     def trimHistory(self):
         overflow = len(self.textLines) - self.maxLines
